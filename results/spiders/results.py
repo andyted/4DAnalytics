@@ -10,10 +10,14 @@ class ResultsSpider(scrapy.Spider):
 	}
 
 	f=open("lastsync.txt","r")
-	drawDate=f.readline().rstrip("\n")
+	lastsync=datetime.datetime.strptime(f.readline().rstrip("\n"),"%Y-%m-%d")
 	f.close()
+	if (lastsync.weekday() == 5):
+		drawDate = lastsync + datetime.timedelta(days=1)
+	else:
+		drawDate = lastsync + datetime.timedelta(days=3)
 	start_urls = [
-		'https://www.gidapp.com/lottery/singapore/4d/date/%s' % drawDate,
+		'https://www.gidapp.com/lottery/singapore/4d/date/%s' % drawDate.strftime("%Y-%m-%d"),
 	]
 
 	def parse(self, response):
